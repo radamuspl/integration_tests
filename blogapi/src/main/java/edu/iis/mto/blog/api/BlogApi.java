@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.iis.mto.blog.api.request.PostRequest;
 import edu.iis.mto.blog.api.request.UserRequest;
+import edu.iis.mto.blog.domain.model.AccountStatus;
 import edu.iis.mto.blog.dto.Id;
 import edu.iis.mto.blog.dto.PostData;
 import edu.iis.mto.blog.dto.UserData;
@@ -55,6 +56,14 @@ public class BlogApi {
         UserData user = finder.getUserData(userId);
         return user;
     }
+    @ApiOperation(value = "get user info based on user id")
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserData getUserStatus(@PathVariable("id") Long userId) {
+    	logger.debug("get user endpoint called for user id '{}'", userId);
+    	UserData user = finder.getUserData(userId);
+    	return user;
+    }
 
     @ApiOperation(value = "find users based on email or first name or last name")
     @RequestMapping(method = RequestMethod.GET, path = "/user/find")
@@ -82,12 +91,12 @@ public class BlogApi {
         return blogService.addLikeToPost(userId, postId);
     }
 
-    @ApiOperation(value = "get user posts based on user id")
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/post")
-    public List<PostData> getUserPosts(@PathVariable("id") Long userId) {
+    @ApiOperation(value = "get user account status based on user id")
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/status")
+    public AccountStatus getUserPosts(@PathVariable("id") Long userId) {
         logger.debug("get user posts endpoint called for user id '{}'", userId);
-        List<PostData> posts = finder.getUserPosts(userId);
-        return posts;
+        AccountStatus status = finder.getUserAccountStatus(userId);
+        return status;
     }
 
     private Id id(Long userId) {
